@@ -3,10 +3,12 @@ var cacheName = 'LifeQuests-v1';
 var filesToCache = [
     '/',
     '/index.html',
+    '/js/jquery.min.js',
+    '/js/bootstrap.min.js',
     '/js/app.js',
     '/js/mod_quest.js',
-    '/js/service_worker.js',
-    '/css/styles.css',
+    '/css/bootstrap.min.css',
+    '/css/styles.css'
 ];
 
 self.addEventListener('install', function(e) {

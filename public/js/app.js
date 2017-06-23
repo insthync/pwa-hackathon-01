@@ -11,11 +11,12 @@ var config = {
     messagingSenderId: "655479433794"
 };
 
+/*
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker
-        .register('./js/service_worker.js')
+        .register('./service_worker.js')
         .then(function() { console.log('Service Worker Registered'); });
-}
+}*/
 
 firebase.initializeApp(config);
 firebase.auth().onAuthStateChanged(function(user) {
