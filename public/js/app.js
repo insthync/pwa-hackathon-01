@@ -11,12 +11,11 @@ var config = {
     messagingSenderId: "655479433794"
 };
 
-/*
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker
         .register('./service_worker.js')
         .then(function() { console.log('Service Worker Registered'); });
-}*/
+}
 
 firebase.initializeApp(config);
 firebase.auth().onAuthStateChanged(function(user) {
@@ -60,7 +59,8 @@ function goToMain() {
     $('body').addClass('body-content-main');
 }
 
-function onSubmitSignUp() {
+function onSubmitSignUp(evt) {
+    evt.preventDefault();
     var email = $('#inputSignUpEmail').val();
     var password = $('#inputSignUpPassword').val();
     loading(true);
@@ -77,7 +77,8 @@ function onSubmitSignUp() {
     });
 }
 
-function onSubmitSignIn() {
+function onSubmitSignIn(evt) {
+    evt.preventDefault();
     var email = $('#inputSignInEmail').val();
     var password = $('#inputSignInPassword').val();
     loading(true);
@@ -109,6 +110,8 @@ function signOut() {
 }
 
 $(document).ready(function() {
+    $('#formSignUp').submit(onSubmitSignUp);
+    $('#formSignIn').submit(onSubmitSignIn);
     var user = firebase.auth().currentUser;
     if (user) {
         signInUser = user;

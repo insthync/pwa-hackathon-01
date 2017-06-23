@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Life Quest</title>
     <link rel="manifest" href="manifest.json">
@@ -48,7 +47,7 @@
     <div class="container">
         <div class="row" id="content-signin">
             <div class="col-md-12">
-                <form onsubmit="onSubmitSignIn()">
+                <form id="formSignIn">
                     <h2 class="form-signin-heading">Sign In</h2>
                     <p>
                         <label for="inputSignInEmail">Email Address</label>
@@ -73,7 +72,7 @@
         </div>
         <div class="row" id="content-signup">
             <div class="col-md-12">
-                <form onsubmit="onSubmitSignUp()">
+                <form id="formSignUp">
                     <h2 class="form-signup-heading">Sign Up</h2>
                     <p>
                         <label for="inputSignUpEmail">Email Address</label>
