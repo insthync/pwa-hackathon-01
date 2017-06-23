@@ -14,9 +14,43 @@ firebase.initializeApp(config);
 firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
         signInUser = user;
-        mainPage();
+        goToMain();
     } else {
         signInUser = undefined;
-        signInPage();
+        goToSignIn();
+    }
+});
+
+function clearBodyContentClass() {
+    $('body').removeClass('body-content-signup');
+    $('body').removeClass('body-content-signin');
+    $('body').removeClass('body-content-main');
+}
+
+function goToSignUp() {
+    clearBodyContentClass();
+    $('body').addClass('body-content-signup');
+}
+
+function goToSignIn() {
+    clearBodyContentClass();
+    $('body').addClass('body-content-signin');
+}
+
+function goToMain() {
+    clearBodyContentClass();
+    $('body').addClass('body-content-main');
+}
+
+$(document).ready(function() {
+    var user = firebase.auth().currentUser;
+    if (user) {
+        signInUser = user;
+        // User is signed in.
+        console.log("User signed in");
+        goToMain();
+    } else {
+        // No user is signed in, show sign in page
+        goToSignIn();
     }
 });

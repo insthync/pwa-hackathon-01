@@ -4,24 +4,22 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PWA Practice</title>
+    <title>Life Quest</title>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="css/styles.css">
 
     <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
     <script src="js/app.js"></script>
 </head>
 
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="nav-top">
+        <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#top-menu" aria-expanded="false">
@@ -44,7 +42,60 @@
             </div>
         </div>
     </nav>
-    <div id="main-content">
+
+    <div class="container">
+        <div class="row" id="content-signin">
+            <div class="col-md-12">
+                <form onsubmit="onSubmitSignIn">
+                    <h2 class="form-signin-heading">Sign In</h2>
+                    <p>
+                        <label for="inputSignInEmail">Email Address</label>
+                        <input type="email" id="inputSignInEmail" class="form-control" placeholder="Email Address" required="">
+                    </p>
+                    <p>
+                        <label for="inputSignInPassword">Password</label>
+                        <input type="password" id="inputSignInPassword" class="form-control" placeholder="Password" required="">
+                    </p><br>
+                    <p>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
+                    </p>
+                </form>
+                <br>
+                <p>
+                    <strong>New to Life Quests?</strong><br> Sign up now to start Life Quest!
+                </p>
+                <p>
+                    <button class="btn btn-lg btn-default btn-block" onclick="goToSignUp()">Sign Up</button>
+                </p>
+            </div>
+        </div>
+        <div class="row" id="content-signup">
+            <div class="col-md-12">
+                <form onsubmit="onSubmitSignUp">
+                    <h2 class="form-signup-heading">Sign Up</h2>
+                    <p>
+                        <label for="inputSignUpEmail">Email Address</label>
+                        <input type="email" id="inputSignUpEmail" class="form-control" placeholder="Email Address" required="">
+                    </p>
+                    <p>
+                        <label for="inputSignUpPassword">Password</label>
+                        <input type="password" id="inputSignUpPassword" class="form-control" placeholder="Password" required="">
+                    </p><br>
+                    <p>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+                    </p>
+                </form>
+                <br>
+                <p>
+                    <strong>Already have account?</strong><br> Sign in to continue Life Quest!
+                </p>
+                <p>
+                    <button class="btn btn-lg btn-default btn-block" onclick="goToSignIn()">Sign In</button>
+                </p>
+            </div>
+        </div>
+        <div class="row" id="content-main">
+        </div>
     </div>
 
     <!-- Latest compiled and minified JavaScript -->
