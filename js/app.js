@@ -12,6 +12,7 @@ var config = {
 };
 firebase.initializeApp(config);
 firebase.auth().onAuthStateChanged(function(user) {
+    console.log(JSON.stringify(user));
     if (user) {
         signInUser = user;
         goToMain();
@@ -20,6 +21,11 @@ firebase.auth().onAuthStateChanged(function(user) {
         goToSignIn();
     }
 });
+
+function showAlert(message) {
+    // TODO: May change to Bootstrap's panels
+    alert(message);
+}
 
 function clearBodyContentClass() {
     $('body').removeClass('body-content-signup');
@@ -40,6 +46,46 @@ function goToSignIn() {
 function goToMain() {
     clearBodyContentClass();
     $('body').addClass('body-content-main');
+}
+
+function onSubmitSignUp() {
+    var email = $('#inputSignUpEmail').val();
+    var password = $('#inputSignUpPassword').val();
+    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+        // Handle Errors here.
+        if (!error || !error.code)
+            return;
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        showAlert(errorMessage);
+    });
+}
+
+function onSubmitSignIn() {
+    var email = $('#inputSignInEmail').val();
+    var password = $('#inputSignInPassword').val();
+    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+        // Handle Errors here.
+        if (!error || !error.code)
+            return;
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        showAlert(errorMessage);
+    });
+}
+
+function signOut() {
+    firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+        signInPage();
+    }).catch(function(error) {
+        // Handle Errors here.
+        if (!error || !error.code)
+            return;
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        showAlert(errorMessage);
+    });
 }
 
 $(document).ready(function() {

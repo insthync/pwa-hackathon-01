@@ -18,6 +18,10 @@ body div#content-main {
     display: none;
 }
 
+body.body-content-main nav#nav-top {
+    display: block!important;
+}
+
 body.body-content-signup div#content-signup {
     display: block!important;
 }
