@@ -10,6 +10,13 @@ var config = {
     storageBucket: "pwa-hackathon-01.appspot.com",
     messagingSenderId: "655479433794"
 };
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+        .register('./js/service_worker.js')
+        .then(function() { console.log('Service Worker Registered'); });
+}
+
 firebase.initializeApp(config);
 firebase.auth().onAuthStateChanged(function(user) {
     console.log(JSON.stringify(user));
