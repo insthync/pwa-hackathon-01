@@ -1,0 +1,30 @@
+body {
+    padding-top: 70px;
+}
+
+body nav#nav-top {
+    display: none;
+}
+
+body div#content-signup,
+body div#content-signin,
+body div#content-main {
+    display: none;
+}
+
+body.body-content-main nav#nav-top {
+    display: block!important;
+}
+
+body.body-content-signup div#content-signup,
+body.body-content-signin div#content-signin,
+body.body-content-main div#content-main {
+    display: block!important;
+}
+
+body.body-content-main-add-quest nav li.menu-add-quest,
+body.body-content-main-your-quest nav li.menu-your-quest,
+body.body-content-main-find-quest nav li.menu-find-quest,
+body.body-content-profile nav li.menu-profile {
+    background-color: #080808;
+}

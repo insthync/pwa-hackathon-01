@@ -27,6 +27,10 @@ function showAlert(message) {
     alert(message);
 }
 
+function loading(isLoading) {
+
+}
+
 function clearBodyContentClass() {
     $('body').removeClass('body-content-signup');
     $('body').removeClass('body-content-signin');
@@ -51,7 +55,11 @@ function goToMain() {
 function onSubmitSignUp() {
     var email = $('#inputSignUpEmail').val();
     var password = $('#inputSignUpPassword').val();
-    firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+    loading(true);
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
+        loading(false);
+    }).catch(function(error) {
+        loading(false);
         // Handle Errors here.
         if (!error || !error.code)
             return;
@@ -64,7 +72,11 @@ function onSubmitSignUp() {
 function onSubmitSignIn() {
     var email = $('#inputSignInEmail').val();
     var password = $('#inputSignInPassword').val();
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+    loading(true);
+    firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+        loading(false);
+    }).catch(function(error) {
+        loading(false);
         // Handle Errors here.
         if (!error || !error.code)
             return;
