@@ -36,16 +36,21 @@ function showAlert(message) {
 
 function setDisableInputAndButton(formId, isDisabled) {
     if (isDisabled) {
-        $('#' + formId + ' :input').prop('disabled', true);
-        $('#' + formId + ' :button').prop('disabled', true);
+        $('#' + formId + ' input').prop('disabled', true);
+        $('#' + formId + ' button').prop('disabled', true);
+        $('#' + formId + ' textarea').prop('disabled', true);
+        $('#' + formId + ' select').prop('disabled', true);
     } else {
-        $('#' + formId + ' :input').removeProp('disabled');
-        $('#' + formId + ' :button').removeProp('disabled');
+        $('#' + formId + ' input').removeProp('disabled');
+        $('#' + formId + ' button').removeProp('disabled');
+        $('#' + formId + ' textarea').removeProp('disabled');
+        $('#' + formId + ' select').removeProp('disabled');
     }
 }
 
 function clearInput(formId) {
-    $('#' + formId + ' :input').val('');
+    $('#' + formId + ' input').val('');
+    $('#' + formId + ' textarea').val('');
 }
 
 function loading(isLoading) {
