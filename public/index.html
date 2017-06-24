@@ -49,14 +49,14 @@
         <div class="row" id="content-signin">
             <div class="col-md-12">
                 <form id="formSignIn">
-                    <h2 class="form-signin-heading">Sign In</h2>
+                    <h2>Sign In</h2>
                     <p>
                         <label for="inputSignInEmail">Email Address</label>
-                        <input type="email" name="email" id="inputSignInEmail" class="form-control" placeholder="Email Address" required="">
+                        <input type="email" name="email" id="inputSignInEmail" class="form-control" placeholder="Email Address" required>
                     </p>
                     <p>
                         <label for="inputSignInPassword">Password</label>
-                        <input type="password" name="password" id="inputSignInPassword" class="form-control" placeholder="Password" required="">
+                        <input type="password" name="password" id="inputSignInPassword" class="form-control" placeholder="Password" required>
                     </p><br>
                     <p>
                         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
@@ -74,14 +74,14 @@
         <div class="row" id="content-signup">
             <div class="col-md-12">
                 <form id="formSignUp">
-                    <h2 class="form-signup-heading">Sign Up</h2>
+                    <h2>Sign Up</h2>
                     <p>
                         <label for="inputSignUpEmail">Email Address</label>
-                        <input type="email" name="email" id="inputSignUpEmail" class="form-control" placeholder="Email Address" required="">
+                        <input type="email" name="email" id="inputSignUpEmail" class="form-control" placeholder="Email Address" required>
                     </p>
                     <p>
                         <label for="inputSignUpPassword">Password</label>
-                        <input type="password" name="password" id="inputSignUpPassword" class="form-control" placeholder="Password" required="">
+                        <input type="password" name="password" id="inputSignUpPassword" class="form-control" placeholder="Password" required>
                     </p><br>
                     <p>
                         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
@@ -97,6 +97,35 @@
             </div>
         </div>
         <div class="row" id="content-main">
+            <div class="col-md-12 add-quest">
+                <form id="formAddQuest">
+                    <h2>Add Quest</h2>
+                    <p>
+                        <label for="inputQuestName">Name</label>
+                        <input type="text" name="questName" id="inputQuestName" class="form-control" placeholder="Quest Name" required>
+                    </p>
+                    <p>
+                        <label for="inputQuestDescription">Description</label>
+                        <textarea name="questDescription" id="inputQuestDescription" class="form-control" placeholder="Quest Description" rows="3" required></textarea>
+                    </p>
+                    <div>
+                        <label for="inputQuestTask">Tasks</label>
+                        <div class="input-group">
+                            <input type="text" name="questTask" id="inputQuestTask" class="form-control" placeholder="Task Description">
+                            <div class="input-group-addon" style="padding:1px;background:transparent">
+                                <button class="btn btn-sm btn-default" type="button" onclick="addQuestTask()">Add Task</button>
+                            </div>
+                        </div>
+                        <table class="table table-hover" style="margin:0;margin-top:10px;">
+                            <tbody id="tasksContainer"></tbody>
+                        </table>
+                    </div>
+                    <br>
+                    <p>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">Add Quest</button>
+                    </p>
+                </form>
+            </div>
         </div>
     </div>
     <script src="js/bootstrap.min.js"></script>

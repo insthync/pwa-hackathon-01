@@ -138,6 +138,7 @@ function signOut() {
 $(document).ready(function() {
     $('#formSignUp').submit(onSubmitSignUp);
     $('#formSignIn').submit(onSubmitSignIn);
+    $('#formAddQuest').submit(onSubmitAddQuest);
     var user = firebase.auth().currentUser;
     if (user) {
         signInUser = user;
