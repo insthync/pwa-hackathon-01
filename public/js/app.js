@@ -34,6 +34,20 @@ function showAlert(message) {
     alert(message);
 }
 
+function setDisableInputAndButton(formId, isDisabled) {
+    if (isDisabled) {
+        $('#' + formId + ' :input').prop('disabled', true);
+        $('#' + formId + ' :button').prop('disabled', true);
+    } else {
+        $('#' + formId + ' :input').removeProp('disabled');
+        $('#' + formId + ' :button').removeProp('disabled');
+    }
+}
+
+function clearInput(formId) {
+    $('#' + formId + ' :input').val('');
+}
+
 function loading(isLoading) {
 
 }
@@ -61,12 +75,18 @@ function goToMain() {
 
 function onSubmitSignUp(evt) {
     evt.preventDefault();
-    var email = $('#inputSignUpEmail').val();
-    var password = $('#inputSignUpPassword').val();
+    setDisableInputAndButton('formSignUp', true);
+    var emailInput = $('#inputSignUpEmail');
+    var psswordInput = $('#inputSignUpPassword');
+    var email = emailInput.val();
+    var password = psswordInput.val();
     loading(true);
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function() {
+        setDisableInputAndButton('formSignUp', false);
+        clearInput('formSignUp');
         loading(false);
     }).catch(function(error) {
+        setDisableInputAndButton('formSignUp', false);
         loading(false);
         // Handle Errors here.
         if (!error || !error.code)
@@ -79,12 +99,18 @@ function onSubmitSignUp(evt) {
 
 function onSubmitSignIn(evt) {
     evt.preventDefault();
-    var email = $('#inputSignInEmail').val();
-    var password = $('#inputSignInPassword').val();
+    setDisableInputAndButton('formSignIn', true);
+    var emailInput = $('#inputSignInEmail');
+    var psswordInput = $('#inputSignInPassword');
+    var email = emailInput.val();
+    var password = psswordInput.val();
     loading(true);
     firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
+        setDisableInputAndButton('formSignIn', false);
+        clearInput('formSignIn');
         loading(false);
     }).catch(function(error) {
+        setDisableInputAndButton('formSignIn', false);
         loading(false);
         // Handle Errors here.
         if (!error || !error.code)

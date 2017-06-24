@@ -3,6 +3,7 @@ var cacheName = 'LifeQuests-v1';
 var filesToCache = [
     '/',
     '/index.html',
+    '/js/firebase.js',
     '/js/jquery.min.js',
     '/js/bootstrap.min.js',
     '/js/app.js',
