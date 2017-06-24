@@ -76,6 +76,7 @@ function goToSignIn() {
 function goToMain() {
     clearBodyContentClass();
     $('body').addClass('body-content-main');
+    goToYourQuest();
 }
 
 function onSubmitSignUp(evt) {

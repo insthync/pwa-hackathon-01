@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
     <title>Life Quest</title>
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -33,12 +34,9 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="top-menu">
-                <ul class="nav navbar-nav">
-                    <li class="menu-add-quest"><a href="#">Add New Quest</a></li>
-                </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="menu-your-quest"><a href="#">Your Quests</a></li>
-                    <li class="menu-find-quest"><a href="#">All Quests</a></li>
+                    <li class="menu-your-quest"><a href="javascript:goToYourQuest()">Your Quests</a></li>
+                    <li class="menu-find-quest"><a href="javascript:goToFindQuest()">All Quests</a></li>
                     <li><a href="javascript:signOut()">Sign Out</a></li>
                 </ul>
             </div>
@@ -125,6 +123,16 @@
                         <button class="btn btn-lg btn-primary btn-block" type="submit">Add Quest</button>
                     </p>
                 </form>
+            </div>
+            <div class="col-md-12 your-quest">
+                <h2>Your Quests</h2>
+                <div class="row" id="yourQuestsContainer">
+                </div>
+            </div>
+            <div class="col-md-12 find-quest">
+                <h2>All Quests</h2>
+                <div class="row" id="findQuestsContainer">
+                </div>
             </div>
         </div>
     </div>

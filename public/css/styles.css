@@ -22,9 +22,9 @@ body.body-content-main div#content-main {
     display: block!important;
 }
 
-body.body-content-main-add-quest nav li.menu-add-quest,
-body.body-content-main-your-quest nav li.menu-your-quest,
-body.body-content-main-find-quest nav li.menu-find-quest,
-body.body-content-profile nav li.menu-profile {
+body.body-content-main-add-quest nav li.menu-add-quest a,
+body.body-content-main-your-quest nav li.menu-your-quest a,
+body.body-content-main-find-quest nav li.menu-find-quest a {
+    color: #fff;
     background-color: #080808;
 }
