@@ -1,6 +1,5 @@
 // Global Data
 var signInUser = undefined;
-
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyAE5ysZS5wL6CQRoFsm80ATYJqGjzQVcDg",
@@ -21,13 +20,26 @@ firebase.initializeApp(config);
 firebase.auth().onAuthStateChanged(function(user) {
     console.log(JSON.stringify(user));
     if (user) {
+        if (!signInUser)
+            goToMain();
         signInUser = user;
-        goToMain();
+        if (typeof(Storage) !== "undefined") {
+            localStorage.signInUser = JSON.stringify(signInUser);
+        }
     } else {
-        signInUser = undefined;
         goToSignIn();
+        signInUser = undefined;
+        removeLocalStorage();
     }
 });
+
+function removeLocalStorage() {
+    if (typeof(Storage) !== "undefined") {
+        localStorage.removeItem("signInUser");
+        localStorage.removeItem("profile");
+        localStorage.removeItem("myQuests");
+    }
+}
 
 function showAlert(message) {
     // TODO: May change to Bootstrap's panels
@@ -130,6 +142,7 @@ function onSubmitSignIn(evt) {
 function signOut() {
     firebase.auth().signOut().then(function() {
         // Sign-out successful.
+        removeLocalStorage();
         signInPage();
     }).catch(function(error) {
         // Handle Errors here.
@@ -146,14 +159,12 @@ $(document).ready(function() {
     $('#formSignIn').submit(onSubmitSignIn);
     $('#formAddQuest').submit(onSubmitAddQuest);
     $('#formChangeName').submit(onSubmitChangeName);
-    var user = firebase.auth().currentUser;
-    if (user) {
-        signInUser = user;
-        // User is signed in.
-        console.log("User signed in");
-        goToMain();
-    } else {
-        // No user is signed in, show sign in page
+    if (typeof(Storage) !== "undefined") {
+        if (localStorage.signInUser) {
+            signInUser = JSON.parse(localStorage.signInUser);
+            goToMain();
+            return;
+        }
         goToSignIn();
     }
 });

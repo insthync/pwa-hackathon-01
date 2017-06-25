@@ -106,6 +106,47 @@ function onSubmitChangeName(evt) {
     });
 }
 
+function addMyQuestToLocalStorage(userQuestId, data) {
+    if (typeof(Storage) !== "undefined") {
+        var loadedMyQuests = [];
+        var containedQuest = false;
+        if (localStorage.myQuests) {
+            loadedMyQuests = JSON.parse(localStorage.myQuests);
+            if (loadedMyQuests.length > 0) {
+                for (var i = loadedMyQuests.length - 1; i >= 0; --i) {
+                    var loadedMyQuest = loadedMyQuests[i];
+                    if (userQuestId === loadedMyQuest.userQuestId) {
+                        containedQuest = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (!containedQuest) {
+            loadedMyQuests.push({ userQuestId, data });
+            localStorage.myQuests = JSON.stringify(loadedMyQuests);
+        }
+    }
+}
+
+function removeMyQuestFromLocalStorage(userQuestId) {
+    if (typeof(Storage) !== "undefined") {
+        if (localStorage.myQuests) {
+            var loadedMyQuests = JSON.parse(localStorage.myQuests);
+            if (loadedMyQuests.length > 0) {
+                for (var i = loadedMyQuests.length - 1; i >= 0; --i) {
+                    var loadedMyQuest = loadedMyQuests[i];
+                    if (userQuestId === loadedMyQuest.userQuestId) {
+                        loadedMyQuests.splice(i, 1);
+                        continue;
+                    }
+                }
+                localStorage.myQuests = JSON.stringify(loadedMyQuests);
+            }
+        }
+    }
+}
+
 function finishQuest(id) {
     firebase.database().ref('user-profiles/' + signInUser.uid).once('value').then(function(userProfileEntry) {
         var updateProfile = {
@@ -140,6 +181,7 @@ function finishQuest(id) {
 
             firebase.database().ref('user-quests/' + signInUser.uid + '/' + id).remove().then(function() {
                 loading(false);
+                removeMyQuestFromLocalStorage(id);
                 refreshYourQuest();
             }).catch(function(error) {
                 loading(false);
@@ -169,6 +211,7 @@ function abandonQuest(id) {
     loading(true);
     firebase.database().ref('user-quests/' + signInUser.uid + '/' + id).remove().then(function() {
         loading(false);
+        removeMyQuestFromLocalStorage(id);
         refreshYourQuest();
     }).catch(function(error) {
         loading(false);
@@ -208,10 +251,14 @@ function startQuest(id) {
 
 function showEmptyQuestEntryMessage(containerId, content) {
     clearQuestEntries(containerId);
-    var html = '<div class="col-md-12"><div class="panel panel-default text-center">';
+    var html = '<div class="col-md-12 empty-quest-entry-message"><div class="panel panel-default text-center">';
     html += '<h4>' + content + '</h4>';
     html += '</div></div>';
     $('#' + containerId).append(html);
+}
+
+function clearEmptyQuestEntryMessage(containerId) {
+    $('#' + containerId + ' .empty-quest-entry-message').remove();
 }
 
 function clearQuestEntries(containerId) {
@@ -219,6 +266,9 @@ function clearQuestEntries(containerId) {
 }
 
 function addQuestEntry(containerId, id, data, actionHtml) {
+    if ($('#' + id).length !== 0) {
+        return;
+    }
     var html = '<div class="col-md-12" id="' + id + '"><div class="panel panel-default">';
     html += '<div class="panel-body">';
     html += '<h4>' + data.questName + '</h4><br>';
@@ -251,68 +301,105 @@ function hideFinishQuestForm(id) {
     $('#yourQuestFinish' + id).css('display', 'none');
 }
 
+function addYourQuestEntry(userQuestId, data) {
+    if (!data)
+        return;
+    var actionHtml = '';
+    actionHtml += '<div id="yourQuestFinish' + userQuestId + '" class="text-left row">';
+    actionHtml += '<div class="col-md-12"><h4>How many attributes you think you should receives by finish this quest?</h4></div>';
+    actionHtml += '<div class="col-md-4"><label>Strength</label><input id="inputFinishQuestStr' + userQuestId + '" type="number" class="form-control" name="strength" value="0" required></div>';
+    actionHtml += '<div class="col-md-4"><label>Agility</label><input id="inputFinishQuestAgi' + userQuestId + '" type="number" class="form-control" name="agility" value="0" required></div>';
+    actionHtml += '<div class="col-md-4"><label>Intelligent</label><input id="inputFinishQuestInt' + userQuestId + '" type="number" class="form-control" name="intelligent" value="0" required></div>';
+    actionHtml += '<div class="col-md-12 text-right">';
+    actionHtml += '<br><a class="btn btn-md btn-success" href="javascript:finishQuest(\'' + userQuestId + '\')">Finish Quest</a>';
+    actionHtml += '&nbsp;<a class="btn btn-md btn-default" href="javascript:hideFinishQuestForm(\'' + userQuestId + '\')">Cancel</a>';
+    actionHtml += '</div>';
+    actionHtml += '</div>';
+    actionHtml += '<div id="yourQuestMenu' + userQuestId + '">';
+    actionHtml += '<a class="btn btn-md btn-success" href="javascript:showFinishQuestForm(\'' + userQuestId + '\')">Finish Quest</a>';
+    actionHtml += '&nbsp;<a class="btn btn-md btn-danger" href="javascript:abandonQuest(\'' + userQuestId + '\')">Abandon</a>';
+    actionHtml += '</div>';
+    addQuestEntry('yourQuestsContainer', 'yourQuestEntry' + userQuestId, data, actionHtml);
+    hideFinishQuestForm(userQuestId);
+}
+
 function refreshYourQuest() {
     var allQuestsRef = firebase.database().ref('user-quests/' + signInUser.uid);
     showEmptyQuestEntryMessage('yourQuestsContainer', 'You are not start any quest<br><br><a class="btn btn-lg btn-default" href="javascript:goToFindQuest()">Find Quests</a>');
+    if (typeof(Storage) !== "undefined") {
+        if (localStorage.myQuests) {
+            var loadedMyQuests = JSON.parse(localStorage.myQuests);
+            if (loadedMyQuests.length > 0) {
+                clearEmptyQuestEntryMessage('yourQuestsContainer');
+                for (var i = 0; i < loadedMyQuests.length; ++i) {
+                    var loadedMyQuest = loadedMyQuests[i];
+                    addYourQuestEntry(loadedMyQuest.userQuestId, loadedMyQuest.data);
+                }
+            }
+        }
+    }
     allQuestsRef.on('value', function(snapshot) {
         if (snapshot.val()) {
-            clearQuestEntries('yourQuestsContainer');
+            clearEmptyQuestEntryMessage('yourQuestsContainer');
             snapshot.forEach(function(startQuestEntry) {
                 var userQuestId = startQuestEntry.getKey();
                 var userQuestData = JSON.parse(JSON.stringify(startQuestEntry.val()));
                 firebase.database().ref('quests/' + userQuestData.questId).once('value').then(function(questEntry) {
                     var id = questEntry.getKey();
                     var data = JSON.parse(JSON.stringify(questEntry.val()));
-                    var actionHtml = '';
-                    actionHtml += '<div id="yourQuestFinish' + userQuestId + '" class="text-left row">';
-                    actionHtml += '<div class="col-md-12"><h4>How many attributes you think you should receives by finish this quest?</h4></div>';
-                    actionHtml += '<div class="col-md-4"><label>Strength</label><input id="inputFinishQuestStr' + userQuestId + '" type="number" class="form-control" name="strength" value="0" required></div>';
-                    actionHtml += '<div class="col-md-4"><label>Agility</label><input id="inputFinishQuestAgi' + userQuestId + '" type="number" class="form-control" name="agility" value="0" required></div>';
-                    actionHtml += '<div class="col-md-4"><label>Intelligent</label><input id="inputFinishQuestInt' + userQuestId + '" type="number" class="form-control" name="intelligent" value="0" required></div>';
-                    actionHtml += '<div class="col-md-12 text-right">';
-                    actionHtml += '<br><a class="btn btn-md btn-success" href="javascript:finishQuest(\'' + userQuestId + '\')">Finish Quest</a>';
-                    actionHtml += '&nbsp;<a class="btn btn-md btn-default" href="javascript:hideFinishQuestForm(\'' + userQuestId + '\')">Cancel</a>';
-                    actionHtml += '</div>';
-                    actionHtml += '</div>';
-                    actionHtml += '<div id="yourQuestMenu' + userQuestId + '">';
-                    actionHtml += '<a class="btn btn-md btn-success" href="javascript:showFinishQuestForm(\'' + userQuestId + '\')">Finish Quest</a>';
-                    actionHtml += '&nbsp;<a class="btn btn-md btn-danger" href="javascript:abandonQuest(\'' + userQuestId + '\')">Abandon</a>';
-                    actionHtml += '</div>';
-                    addQuestEntry('yourQuestsContainer', 'yourQuestEntry' + userQuestId, data, actionHtml);
-                    hideFinishQuestForm(userQuestId);
+                    addYourQuestEntry(userQuestId, data);
+                    addMyQuestToLocalStorage(userQuestId, data);
                 });
             });
         }
     });
 }
 
+function addFindQuestEntry(id, data) {
+    if (!data)
+        return;
+    var actionHtml = '<a class="btn btn-md btn-success" href="javascript:startQuest(\'' + id + '\')">Start Quest</a>';
+    addQuestEntry('findQuestsContainer', 'findQuestEntry' + id, data, actionHtml);
+}
+
 function refreshFindQuest() {
     var allQuestsRef = firebase.database().ref('quests');
-    showEmptyQuestEntryMessage('findQuestsContainer', 'No Quests');
+    showEmptyQuestEntryMessage('findQuestsContainer', 'No Quests, If you are not connected to internet, You have to do that.');
     allQuestsRef.on('value', function(snapshot) {
         if (snapshot.val()) {
-            clearQuestEntries('findQuestsContainer');
+            clearEmptyQuestEntryMessage('findQuestsContainer');
             snapshot.forEach(function(questEntry) {
                 var id = questEntry.getKey();
                 var data = JSON.parse(JSON.stringify(questEntry.val()));
-                var actionHtml = '<a class="btn btn-md btn-success" href="javascript:startQuest(\'' + id + '\')">Start Quest</a>';
-                addQuestEntry('findQuestsContainer', 'findQuestEntry' + id, data, actionHtml);
+                addFindQuestEntry(id, data);
             });
         }
     });
 }
 
 function refreshProfile() {
+    var updateProfile = {
+        characterName: '',
+        strength: 0,
+        agility: 0,
+        intelligent: 0,
+    };
+    if (typeof(Storage) !== "undefined") {
+        if (localStorage.profile) {
+            updateProfile = JSON.parse(localStorage.profile);
+            $('#inputProfileCharacterName').val(updateProfile.characterName);
+            $('#profileStrValue').html(updateProfile.strength);
+            $('#profileAgiValue').html(updateProfile.agility);
+            $('#profileIntValue').html(updateProfile.intelligent);
+        }
+    }
     firebase.database().ref('user-profiles/' + signInUser.uid).once('value').then(function(userProfileEntry) {
-        var updateProfile = {
-            characterName: '',
-            strength: 0,
-            agility: 0,
-            intelligent: 0,
-        };
         if (userProfileEntry.val())
             updateProfile = JSON.parse(JSON.stringify(userProfileEntry));
-        console.log(updateProfile);
+
+        if (typeof(Storage) !== "undefined") {
+            localStorage.profile = JSON.stringify(updateProfile);
+        }
         $('#inputProfileCharacterName').val(updateProfile.characterName);
         $('#profileStrValue').html(updateProfile.strength);
         $('#profileAgiValue').html(updateProfile.agility);
