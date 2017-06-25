@@ -35,7 +35,8 @@ body div#content-main div.add-quest,
 body div#content-main div.your-quest,
 body div#content-main div.find-quest,
 body div#content-main div.profile,
-body div#content-main div.battle {
+body div#content-main div.battle,
+body div#content-main div.battle-result {
     display: none;
 }
 
@@ -43,6 +44,7 @@ body.body-content-main-add-quest div#content-main div.add-quest,
 body.body-content-main-your-quest div#content-main div.your-quest,
 body.body-content-main-find-quest div#content-main div.find-quest,
 body.body-content-main-profile div#content-main div.profile,
-body.body-content-main-battle div#content-main div.battle {
+body.body-content-main-battle div#content-main div.battle,
+body.body-content-main-battle-result div#content-main div.battle-result {
     display: block!important;
 }

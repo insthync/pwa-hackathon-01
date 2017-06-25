@@ -98,6 +98,7 @@ function clearBodyMainContentClass() {
     $('body').removeClass('body-content-main-find-quest');
     $('body').removeClass('body-content-main-profile');
     $('body').removeClass('body-content-main-battle');
+    $('body').removeClass('body-content-main-battle-result');
 }
 
 function goToAddQuest() {
@@ -127,6 +128,11 @@ function goToBattle() {
     clearBodyMainContentClass();
     $('body').addClass('body-content-main-battle');
     refreshBattle();
+}
+
+function goToBattleResult() {
+    clearBodyMainContentClass();
+    $('body').addClass('body-content-main-battle-result');
 }
 
 function onSubmitSignUp(evt) {

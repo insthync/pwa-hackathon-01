@@ -2,7 +2,7 @@ function createFighterStat(profile) {
     return {
         minAtk: 1 + (profile.intelligent * 2.5),
         maxAtk: 3 + (profile.intelligent * 2.75),
-        hp: 100 + (profile.strength * 5),
+        hp: 50 + (profile.strength * 5),
         def: profile.agility * 2,
     }
 }
@@ -15,6 +15,14 @@ function calculationFight(profileA, profileB) {
     var isProfileAWin = false;
     var profileAStat = createFighterStat(profileA);
     var profileBStat = createFighterStat(profileB);
+    var myCharacterName = profileA.characterName;
+    if (!myCharacterName)
+        myCharacterName = 'Unknow Player';
+    var enemyCharacterName = profileB.characterName;
+    if (!enemyCharacterName)
+        enemyCharacterName = 'Unknow Player';
+    $('#battleResultContainer').html('');
+    var html = '<h4>' + myCharacterName + ' VS ' + enemyCharacterName + ' </h4><br><ul>';
     while (profileAStat.hp > 0 && profileBStat.hp > 0) {
         var aAtk = getRandomInt(profileAStat.minAtk, profileAStat.maxAtk);
         var bAtk = getRandomInt(profileBStat.minAtk, profileBStat.maxAtk);
@@ -24,18 +32,22 @@ function calculationFight(profileA, profileB) {
             aDmg = 1;
         if (bDmg <= 0)
             bDmg = 1;
-        profileAStat.hp -= aDmg;
         profileBStat.hp -= bDmg;
+        profileAStat.hp -= aDmg;
+        html += '<li class="success"><strong>You</strong> attack <strong>' + enemyCharacterName + '</strong> - ' + bDmg + ' Damages, Remaining HP: ' + profileBStat.hp + '.</li>';
+        html += '<li class="danger"><strong>' + enemyCharacterName + '</strong> attack <strong>You</strong> - ' + aDmg + ' Damages, Remaining HP: ' + profileAStat.hp + '.</li>';
     }
+    html += '</ul>';
+    $('#battleResultContainer').html(html)
     return profileAStat.hp > 0;
 }
 
 function onFightWin(id) {
-    showAlert("You Win");
+    $('#battleResultTitle').html("You Win");
 }
 
 function onFightLose(id) {
-    showAlert("You Lose");
+    $('#battleResultTitle').html("You Lose");
 }
 
 function startFight(id) {
@@ -47,11 +59,13 @@ function startFight(id) {
                     var fighterProfile = JSON.parse(JSON.stringify(userProfileEntry));
 
                     if (calculationFight(myProfile, fighterProfile)) {
+                        goToBattleResult();
                         onFightWin(id);
                         if (!myProfile.battleWin)
                             myProfile.battleWin = 0;
                         ++myProfile.battleWin;
                     } else {
+                        goToBattleResult();
                         onFightLose(id);
                         if (!myProfile.battleLose)
                             myProfile.battleLose = 0;
