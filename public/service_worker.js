@@ -1,5 +1,5 @@
 var dataCacheName = 'LifeQuests-data-v1';
-var cacheName = 'LifeQuests-v1-7-6';
+var cacheName = 'LifeQuests-v1-8';
 var filesToCache = [
     '/',
     '/index.html',
@@ -7,6 +7,8 @@ var filesToCache = [
     '/js/jquery.min.js',
     '/js/bootstrap.min.js',
     '/js/app.js',
+    '/js/mod_profile.js',
+    '/js/mod_battle.js',
     '/js/mod_quest.js',
     '/css/bootstrap.min.css',
     '/css/styles.css'

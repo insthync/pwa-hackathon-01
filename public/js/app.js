@@ -92,6 +92,43 @@ function goToMain() {
     goToProfile();
 }
 
+function clearBodyMainContentClass() {
+    $('body').removeClass('body-content-main-add-quest');
+    $('body').removeClass('body-content-main-your-quest');
+    $('body').removeClass('body-content-main-find-quest');
+    $('body').removeClass('body-content-main-profile');
+    $('body').removeClass('body-content-main-battle');
+}
+
+function goToAddQuest() {
+    clearBodyMainContentClass();
+    $('body').addClass('body-content-main-add-quest');
+}
+
+function goToYourQuest() {
+    clearBodyMainContentClass();
+    $('body').addClass('body-content-main-your-quest');
+    refreshYourQuest();
+}
+
+function goToFindQuest() {
+    clearBodyMainContentClass();
+    $('body').addClass('body-content-main-find-quest');
+    refreshFindQuest();
+}
+
+function goToProfile() {
+    clearBodyMainContentClass();
+    $('body').addClass('body-content-main-profile');
+    refreshProfile();
+}
+
+function goToBattle() {
+    clearBodyMainContentClass();
+    $('body').addClass('body-content-main-battle');
+    refreshBattle();
+}
+
 function onSubmitSignUp(evt) {
     evt.preventDefault();
     setDisableInputAndButton('formSignUp', true);
@@ -153,6 +190,22 @@ function signOut() {
         var errorMessage = error.message;
         showAlert(errorMessage);
     });
+}
+
+function showEmptyListEntryMessage(containerId, content) {
+    clearListEntries(containerId);
+    var html = '<div class="col-md-12 empty-quest-entry-message"><div class="panel panel-default text-center">';
+    html += '<h4>' + content + '</h4>';
+    html += '</div></div>';
+    $('#' + containerId).append(html);
+}
+
+function clearEmptyListEntryMessage(containerId) {
+    $('#' + containerId + ' .empty-quest-entry-message').remove();
+}
+
+function clearListEntries(containerId) {
+    $('#' + containerId).html('');
 }
 
 $(document).ready(function() {

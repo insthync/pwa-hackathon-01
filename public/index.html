@@ -33,6 +33,7 @@
             <div class="collapse navbar-collapse" id="top-menu">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="menu-profile"><a href="javascript:goToProfile()">Profile</a></li>
+                    <li class="menu-battle"><a href="javascript:goToBattle()">Battle</a></li>
                     <li class="menu-your-quest"><a href="javascript:goToYourQuest()">Your Quests</a></li>
                     <li class="menu-find-quest"><a href="javascript:goToFindQuest()">Find Quests</a></li>
                     <li><a href="javascript:signOut()">Sign Out</a></li>
@@ -132,6 +133,11 @@
                 <div class="row" id="findQuestsContainer">
                 </div>
             </div>
+            <div class="col-md-12 battle">
+                <h2>Battle</h2>
+                <div class="row" id="fighterContainer">
+                </div>
+            </div>
             <div class="col-md-12 profile">
                 <h2>Profile</h2>
                 <div class="row text-center">
@@ -160,6 +166,8 @@
     <script src="js/firebase.js"></script>
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/mod_profile.js"></script>
+    <script src="js/mod_battle.js"></script>
     <script src="js/mod_quest.js"></script>
     <script src="js/app.js"></script>
 </body>

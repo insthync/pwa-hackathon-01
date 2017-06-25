@@ -67,45 +67,6 @@ function onSubmitAddQuest(evt) {
     });
 }
 
-function onSubmitChangeName(evt) {
-    evt.preventDefault();
-
-    firebase.database().ref('user-profiles/' + signInUser.uid).once('value').then(function(userProfileEntry) {
-        var updateProfile = {
-            characterName: '',
-            strength: 0,
-            agility: 0,
-            intelligent: 0,
-        };
-        if (userProfileEntry.val())
-            updateProfile = JSON.parse(JSON.stringify(userProfileEntry));
-
-        var characterNameInput = $('#inputProfileCharacterName');
-        var characterName = characterNameInput.val();
-        updateProfile.characterName = characterName;
-
-        var updates = {};
-        updates['user-profiles/' + signInUser.uid] = updateProfile;
-
-        setDisableInputAndButton('formChangeName', true);
-        loading(true);
-        firebase.database().ref().update(updates).then(function() {
-            $('#tasksContainer').empty();
-            setDisableInputAndButton('formChangeName', false);
-            loading(false);
-        }).catch(function(error) {
-            setDisableInputAndButton('formChangeName', false);
-            loading(false);
-            // Handle Errors here.
-            if (!error || !error.code)
-                return;
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            showAlert(errorMessage);
-        });
-    });
-}
-
 function addMyQuestToLocalStorage(userQuestId, data) {
     if (typeof(Storage) !== "undefined") {
         var loadedMyQuests = [];
@@ -149,12 +110,7 @@ function removeMyQuestFromLocalStorage(userQuestId) {
 
 function finishQuest(id) {
     firebase.database().ref('user-profiles/' + signInUser.uid).once('value').then(function(userProfileEntry) {
-        var updateProfile = {
-            characterName: '',
-            strength: 0,
-            agility: 0,
-            intelligent: 0,
-        };
+        var updateProfile = getEmptyProfile();
         if (userProfileEntry.val())
             updateProfile = JSON.parse(JSON.stringify(userProfileEntry));
 
@@ -249,22 +205,6 @@ function startQuest(id) {
     });
 }
 
-function showEmptyQuestEntryMessage(containerId, content) {
-    clearQuestEntries(containerId);
-    var html = '<div class="col-md-12 empty-quest-entry-message"><div class="panel panel-default text-center">';
-    html += '<h4>' + content + '</h4>';
-    html += '</div></div>';
-    $('#' + containerId).append(html);
-}
-
-function clearEmptyQuestEntryMessage(containerId) {
-    $('#' + containerId + ' .empty-quest-entry-message').remove();
-}
-
-function clearQuestEntries(containerId) {
-    $('#' + containerId).html('');
-}
-
 function addQuestEntry(containerId, id, data, actionHtml) {
     if ($('#' + id).length !== 0) {
         return;
@@ -325,12 +265,12 @@ function addYourQuestEntry(userQuestId, data) {
 
 function refreshYourQuest() {
     var allQuestsRef = firebase.database().ref('user-quests/' + signInUser.uid);
-    showEmptyQuestEntryMessage('yourQuestsContainer', 'You are not start any quest<br><br><a class="btn btn-lg btn-default" href="javascript:goToFindQuest()">Find Quests</a>');
+    showEmptyListEntryMessage('yourQuestsContainer', 'You are not start any quest<br><br><a class="btn btn-lg btn-default" href="javascript:goToFindQuest()">Find Quests</a>');
     if (typeof(Storage) !== "undefined") {
         if (localStorage.myQuests) {
             var loadedMyQuests = JSON.parse(localStorage.myQuests);
             if (loadedMyQuests.length > 0) {
-                clearEmptyQuestEntryMessage('yourQuestsContainer');
+                clearEmptyListEntryMessage('yourQuestsContainer');
                 for (var i = 0; i < loadedMyQuests.length; ++i) {
                     var loadedMyQuest = loadedMyQuests[i];
                     addYourQuestEntry(loadedMyQuest.userQuestId, loadedMyQuest.data);
@@ -340,7 +280,7 @@ function refreshYourQuest() {
     }
     allQuestsRef.on('value', function(snapshot) {
         if (snapshot.val()) {
-            clearEmptyQuestEntryMessage('yourQuestsContainer');
+            clearEmptyListEntryMessage('yourQuestsContainer');
             snapshot.forEach(function(startQuestEntry) {
                 var userQuestId = startQuestEntry.getKey();
                 var userQuestData = JSON.parse(JSON.stringify(startQuestEntry.val()));
@@ -364,10 +304,10 @@ function addFindQuestEntry(id, data) {
 
 function refreshFindQuest() {
     var allQuestsRef = firebase.database().ref('quests');
-    showEmptyQuestEntryMessage('findQuestsContainer', 'No Quests, If you are not connected to internet, You have to do that.');
+    showEmptyListEntryMessage('findQuestsContainer', 'No Quests, If you are not connected to internet, You have to do that.');
     allQuestsRef.on('value', function(snapshot) {
         if (snapshot.val()) {
-            clearEmptyQuestEntryMessage('findQuestsContainer');
+            clearEmptyListEntryMessage('findQuestsContainer');
             snapshot.forEach(function(questEntry) {
                 var id = questEntry.getKey();
                 var data = JSON.parse(JSON.stringify(questEntry.val()));
@@ -375,64 +315,4 @@ function refreshFindQuest() {
             });
         }
     });
-}
-
-function refreshProfile() {
-    var updateProfile = {
-        characterName: '',
-        strength: 0,
-        agility: 0,
-        intelligent: 0,
-    };
-    if (typeof(Storage) !== "undefined") {
-        if (localStorage.profile) {
-            updateProfile = JSON.parse(localStorage.profile);
-            $('#inputProfileCharacterName').val(updateProfile.characterName);
-            $('#profileStrValue').html(updateProfile.strength);
-            $('#profileAgiValue').html(updateProfile.agility);
-            $('#profileIntValue').html(updateProfile.intelligent);
-        }
-    }
-    firebase.database().ref('user-profiles/' + signInUser.uid).once('value').then(function(userProfileEntry) {
-        if (userProfileEntry.val())
-            updateProfile = JSON.parse(JSON.stringify(userProfileEntry));
-
-        if (typeof(Storage) !== "undefined") {
-            localStorage.profile = JSON.stringify(updateProfile);
-        }
-        $('#inputProfileCharacterName').val(updateProfile.characterName);
-        $('#profileStrValue').html(updateProfile.strength);
-        $('#profileAgiValue').html(updateProfile.agility);
-        $('#profileIntValue').html(updateProfile.intelligent);
-    });
-}
-
-function clearBodyMainContentClass() {
-    $('body').removeClass('body-content-main-add-quest');
-    $('body').removeClass('body-content-main-your-quest');
-    $('body').removeClass('body-content-main-find-quest');
-    $('body').removeClass('body-content-main-profile');
-}
-
-function goToAddQuest() {
-    clearBodyMainContentClass();
-    $('body').addClass('body-content-main-add-quest');
-}
-
-function goToYourQuest() {
-    clearBodyMainContentClass();
-    $('body').addClass('body-content-main-your-quest');
-    refreshYourQuest();
-}
-
-function goToFindQuest() {
-    clearBodyMainContentClass();
-    $('body').addClass('body-content-main-find-quest');
-    refreshFindQuest();
-}
-
-function goToProfile() {
-    clearBodyMainContentClass();
-    $('body').addClass('body-content-main-profile');
-    refreshProfile();
 }
