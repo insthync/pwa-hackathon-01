@@ -5,7 +5,7 @@ function getEmptyProfile() {
         agility: 0,
         intelligent: 0,
         battleWin: 0,
-        battleLost: 0,
+        battleLose: 0,
     };
 }
 
@@ -52,6 +52,8 @@ function refreshProfile() {
             $('#profileStrValue').html(updateProfile.strength);
             $('#profileAgiValue').html(updateProfile.agility);
             $('#profileIntValue').html(updateProfile.intelligent);
+            $('#profileBattleWinValue').html(updateProfile.battleWin);
+            $('#profileBattleLoseValue').html(updateProfile.battleLose);
         }
     }
     firebase.database().ref('user-profiles/' + signInUser.uid).once('value').then(function(userProfileEntry) {
@@ -65,5 +67,7 @@ function refreshProfile() {
         $('#profileStrValue').html(updateProfile.strength);
         $('#profileAgiValue').html(updateProfile.agility);
         $('#profileIntValue').html(updateProfile.intelligent);
+        $('#profileBattleWinValue').html(updateProfile.battleWin);
+        $('#profileBattleLoseValue').html(updateProfile.battleLose);
     });
 }
