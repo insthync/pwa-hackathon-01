@@ -59,22 +59,27 @@ function refreshProfile() {
     firebase.database().ref('user-profiles/' + signInUser.uid).once('value').then(function(userProfileEntry) {
         if (userProfileEntry.val()) {
             updateProfile = JSON.parse(JSON.stringify(userProfileEntry));
-        } else {
-            updates['user-profiles/' + signInUser.uid] = updateProfile;
-
-            loading(true);
-            firebase.database().ref().update(updates).then(function() {
-                loading(false);
-            }).catch(function(error) {
-                loading(false);
-                // Handle Errors here.
-                if (!error || !error.code)
-                    return;
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                showAlert(errorMessage);
-            });
+            if (!myProfile.battleWin)
+                myProfile.battleWin = 0;
+            if (!myProfile.battleLose)
+                myProfile.battleLose = 0;
         }
+
+        var updates = {};
+        updates['user-profiles/' + signInUser.uid] = updateProfile;
+
+        loading(true);
+        firebase.database().ref().update(updates).then(function() {
+            loading(false);
+        }).catch(function(error) {
+            loading(false);
+            // Handle Errors here.
+            if (!error || !error.code)
+                return;
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            showAlert(errorMessage);
+        });
 
         if (typeof(Storage) !== "undefined") {
             localStorage.profile = JSON.stringify(updateProfile);

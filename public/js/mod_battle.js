@@ -1,16 +1,33 @@
 function createFighterStat(profile) {
+    return {
+        minAtk: 1 + (profile.intelligent * 2.5),
+        maxAtk: 3 + (profile.intelligent * 2.75),
+        hp: 100 + (profile.strength * 5),
+        def: profile.agility * 2,
+    }
+}
 
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function calculationFight(profileA, profileB) {
     var isProfileAWin = false;
-    var profileAStat = {
-
+    var profileAStat = createFighterStat(profileA);
+    var profileBStat = createFighterStat(profileB);
+    while (profileAStat.hp > 0 && profileBStat.hp > 0) {
+        var aAtk = getRandomInt(profileAStat.minAtk, profileAStat.maxAtk);
+        var bAtk = getRandomInt(profileBStat.minAtk, profileBStat.maxAtk);
+        var aDmg = bAtk - profileAStat.def;
+        var bDmg = aAtk - profileBStat.def;
+        if (aDmg <= 0)
+            aDmg = 1;
+        if (bDmg <= 0)
+            bDmg = 1;
+        profileAStat.hp -= aDmg;
+        profileBStat.hp -= bDmg;
     }
-    var profileBStat = {
-
-    }
-    return isProfileAWin;
+    return profileAStat.hp > 0;
 }
 
 function onFightWin(id) {
@@ -43,8 +60,6 @@ function startFight(id) {
 
                     var updates = {};
                     updates['user-profiles/' + signInUser.uid] = myProfile;
-
-                    console.log(myProfile);
 
                     loading(true);
                     firebase.database().ref().update(updates).then(function() {
