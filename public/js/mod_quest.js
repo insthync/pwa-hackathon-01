@@ -67,6 +67,51 @@ function onSubmitAddQuest(evt) {
     });
 }
 
+function finishQuest(id) {
+
+}
+
+function abandonQuest(id) {
+    loading(true);
+    firebase.database().ref('user-quests/' + signInUser.uid + '/' + id).remove().then(function() {
+        loading(false);
+        refreshYourQuest();
+    }).catch(function(error) {
+        loading(false);
+        // Handle Errors here.
+        if (!error || !error.code)
+            return;
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        showAlert(errorMessage);
+    });
+}
+
+function startQuest(id) {
+    var startQuestData = {
+        questId: id,
+    }
+
+    var newQuestKey = firebase.database().ref().child('user-quests/' + signInUser.uid + '/quests').push().key;
+
+    var updates = {};
+    updates['/user-quests/' + signInUser.uid + '/' + newQuestKey] = startQuestData;
+
+    loading(true);
+    firebase.database().ref().update(updates).then(function() {
+        loading(false);
+        showAlert('Quest has begun!!');
+    }).catch(function(error) {
+        loading(false);
+        // Handle Errors here.
+        if (!error || !error.code)
+            return;
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        showAlert(errorMessage);
+    });
+}
+
 function showEmptyQuestEntryMessage(containerId, content) {
     clearQuestEntries(containerId);
     var html = '<div class="col-md-12"><div class="panel panel-default text-center">';
@@ -102,53 +147,8 @@ function addQuestEntry(containerId, id, data, actionHtml) {
     $('#' + containerId).append(html);
 }
 
-function finishQuest(id) {
-
-}
-
-function abandonQuest(id) {
-    loading(true);
-    firebase.database().ref('user-quests/' + id).remove().then(function() {
-        loading(false);
-        refreshYourQuest();
-    }).catch(function(error) {
-        loading(false);
-        // Handle Errors here.
-        if (!error || !error.code)
-            return;
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        showAlert(errorMessage);
-    });
-}
-
-function startQuest(id) {
-    var startQuestData = {
-        questId: id,
-    }
-
-    var newQuestKey = firebase.database().ref().child('user-quests').push().key;
-
-    var updates = {};
-    updates['/user-quests/' + signInUser.uid] = startQuestData;
-
-    loading(true);
-    firebase.database().ref().update(updates).then(function() {
-        loading(false);
-        showAlert('Quest has begun!!');
-    }).catch(function(error) {
-        loading(false);
-        // Handle Errors here.
-        if (!error || !error.code)
-            return;
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        showAlert(errorMessage);
-    });
-}
-
 function refreshYourQuest() {
-    var allQuestsRef = firebase.database().ref('user-quests');
+    var allQuestsRef = firebase.database().ref('user-quests/' + signInUser.uid);
     showEmptyQuestEntryMessage('yourQuestsContainer', 'You are not start any quest<br><br><a class="btn btn-lg btn-default" href="javascript:goToFindQuest()">Find Quests</a>');
     allQuestsRef.on('value', function(snapshot) {
         if (snapshot.val()) {
