@@ -22,7 +22,7 @@ function calculationFight(profileA, profileB) {
     if (!enemyCharacterName)
         enemyCharacterName = 'Unknow Player';
     $('#battleResultContainer').html('');
-    var html = '<h4>' + myCharacterName + ' VS ' + enemyCharacterName + ' </h4><br><ul>';
+    var html = '<h4>' + myCharacterName + ' VS ' + enemyCharacterName + ' </h4><br><table class="table table-bordered">';
     while (profileAStat.hp > 0 && profileBStat.hp > 0) {
         var aAtk = getRandomInt(profileAStat.minAtk, profileAStat.maxAtk);
         var bAtk = getRandomInt(profileBStat.minAtk, profileBStat.maxAtk);
@@ -34,10 +34,12 @@ function calculationFight(profileA, profileB) {
             bDmg = 1;
         profileBStat.hp -= bDmg;
         profileAStat.hp -= aDmg;
-        html += '<li class="success"><strong>You</strong> attack <strong>' + enemyCharacterName + '</strong> - ' + bDmg + ' Damages, Remaining HP: ' + profileBStat.hp + '.</li>';
-        html += '<li class="danger"><strong>' + enemyCharacterName + '</strong> attack <strong>You</strong> - ' + aDmg + ' Damages, Remaining HP: ' + profileAStat.hp + '.</li>';
+        html += '<tr><td class="success"><strong>You</strong> attack <strong>' + enemyCharacterName + '</strong>: ' + bDmg + ' Damages</td></tr>';
+        html += '<tr><td class="info"><strong>' + enemyCharacterName + '</strong> remains HP: ' + profileBStat.hp + '</td></tr>';
+        html += '<tr><td class="danger"><strong>' + enemyCharacterName + '\'s</strong> attack <strong>You</strong>: ' + aDmg + ' Damages</td></tr>';
+        html += '<tr><td class="info"><strong>Your</strong> remains HP: ' + profileAStat.hp + '</td></tr>';
     }
-    html += '</ul>';
+    html += '</table>';
     $('#battleResultContainer').html(html)
     return profileAStat.hp > 0;
 }
