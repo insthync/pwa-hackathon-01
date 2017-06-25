@@ -1,5 +1,5 @@
 var dataCacheName = 'LifeQuests-data-v1';
-var cacheName = 'LifeQuests-v1-9';
+var cacheName = 'LifeQuests-v1-9-1';
 var filesToCache = [
     '/',
     '/index.html',
