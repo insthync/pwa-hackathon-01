@@ -200,6 +200,24 @@ function signOut() {
     });
 }
 
+function signInWithFacebook() {
+    var provider = new firebase.auth.FacebookAuthProvider();
+    loading(true);
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        var token = result.credential.accessToken;
+        loading(false);
+    }).catch(function(error) {
+        loading(false);
+        // Handle Errors here.
+        if (!error || !error.code)
+            return;
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        showAlert(errorMessage);
+    });
+}
+
 function showEmptyListEntryMessage(containerId, content) {
     clearListEntries(containerId);
     var html = '<div class="col-md-12 empty-quest-entry-message"><div class="panel panel-default text-center">';

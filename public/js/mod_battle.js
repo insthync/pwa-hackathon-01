@@ -1,14 +1,14 @@
 function createFighterStat(profile) {
     return {
-        minAtk: 1 + (profile.intelligent * 2.5),
+        minAtk: 1 + (profile.intelligent * 2.25),
         maxAtk: 3 + (profile.intelligent * 2.75),
-        hp: 50 + (profile.strength * 5),
+        hp: 50 + (profile.strength * 3),
         def: profile.agility * 2,
     }
 }
 
 function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return (Math.random() * (max - min + 1)) + min;
 }
 
 function calculationFight(profileA, profileB) {
@@ -26,8 +26,8 @@ function calculationFight(profileA, profileB) {
     while (profileAStat.hp > 0 && profileBStat.hp > 0) {
         var aAtk = getRandomInt(profileAStat.minAtk, profileAStat.maxAtk);
         var bAtk = getRandomInt(profileBStat.minAtk, profileBStat.maxAtk);
-        var aDmg = bAtk - profileAStat.def;
-        var bDmg = aAtk - profileBStat.def;
+        var aDmg = Math.round(bAtk - profileAStat.def);
+        var bDmg = Math.round(aAtk - profileBStat.def);
         if (aDmg <= 0)
             aDmg = 1;
         if (bDmg <= 0)
