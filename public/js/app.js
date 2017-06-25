@@ -20,9 +20,10 @@ firebase.initializeApp(config);
 firebase.auth().onAuthStateChanged(function(user) {
     console.log(JSON.stringify(user));
     if (user) {
-        if (!signInUser)
+        if (!signInUser) {
+            signInUser = user;
             goToMain();
-        signInUser = user;
+        }
         if (typeof(Storage) !== "undefined") {
             localStorage.signInUser = JSON.stringify(signInUser);
         }
