@@ -59,10 +59,10 @@ function refreshProfile() {
     firebase.database().ref('user-profiles/' + signInUser.uid).once('value').then(function(userProfileEntry) {
         if (userProfileEntry.val()) {
             updateProfile = JSON.parse(JSON.stringify(userProfileEntry));
-            if (!myProfile.battleWin)
-                myProfile.battleWin = 0;
-            if (!myProfile.battleLose)
-                myProfile.battleLose = 0;
+            if (!updateProfile.battleWin)
+                updateProfile.battleWin = 0;
+            if (!updateProfile.battleLose)
+                updateProfile.battleLose = 0;
         }
 
         var updates = {};
