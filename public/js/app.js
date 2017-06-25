@@ -71,6 +71,7 @@ function loading(isLoading) {
 }
 
 function clearBodyContentClass() {
+    $('html,body').scrollTop(0);
     $('body').removeClass('body-content-signup');
     $('body').removeClass('body-content-signin');
     $('body').removeClass('body-content-main');
@@ -93,6 +94,7 @@ function goToMain() {
 }
 
 function clearBodyMainContentClass() {
+    $('html,body').scrollTop(0);
     $('body').removeClass('body-content-main-add-quest');
     $('body').removeClass('body-content-main-your-quest');
     $('body').removeClass('body-content-main-find-quest');
