@@ -76,7 +76,7 @@ function goToSignIn() {
 function goToMain() {
     clearBodyContentClass();
     $('body').addClass('body-content-main');
-    goToYourQuest();
+    goToProfile();
 }
 
 function onSubmitSignUp(evt) {
@@ -145,6 +145,7 @@ $(document).ready(function() {
     $('#formSignUp').submit(onSubmitSignUp);
     $('#formSignIn').submit(onSubmitSignIn);
     $('#formAddQuest').submit(onSubmitAddQuest);
+    $('#formChangeName').submit(onSubmitChangeName);
     var user = firebase.auth().currentUser;
     if (user) {
         signInUser = user;

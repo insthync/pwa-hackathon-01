@@ -67,6 +67,11 @@ function onSubmitAddQuest(evt) {
     });
 }
 
+function onSubmitChangeName(evt) {
+    evt.preventDefault();
+
+}
+
 function finishQuest(id) {
     firebase.database().ref('user-profiles/' + signInUser.uid).once('value').then(function(userProfileEntry) {
         var updateProfile = {
@@ -263,10 +268,29 @@ function refreshFindQuest() {
     });
 }
 
+function refreshProfile() {
+    firebase.database().ref('user-profiles/' + signInUser.uid).once('value').then(function(userProfileEntry) {
+        var updateProfile = {
+            characterName: '',
+            strength: 0,
+            agility: 0,
+            intelligent: 0,
+        };
+        if (userProfileEntry.val())
+            updateProfile = JSON.parse(JSON.stringify(userProfileEntry));
+        console.log(updateProfile);
+        $('#inputProfileCharacterName').html(updateProfile.characterName);
+        $('#profileStrValue').html(updateProfile.strength);
+        $('#profileAgiValue').html(updateProfile.agility);
+        $('#profileIntValue').html(updateProfile.intelligent);
+    });
+}
+
 function clearBodyMainContentClass() {
     $('body').removeClass('body-content-main-add-quest');
     $('body').removeClass('body-content-main-your-quest');
     $('body').removeClass('body-content-main-find-quest');
+    $('body').removeClass('body-content-main-profile');
 }
 
 function goToAddQuest() {
@@ -284,4 +308,10 @@ function goToFindQuest() {
     clearBodyMainContentClass();
     $('body').addClass('body-content-main-find-quest');
     refreshFindQuest();
+}
+
+function goToProfile() {
+    clearBodyMainContentClass();
+    $('body').addClass('body-content-main-profile');
+    refreshProfile();
 }

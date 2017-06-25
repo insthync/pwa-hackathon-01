@@ -24,19 +24,22 @@ body.body-content-main div#content-main {
 
 body.body-content-main-add-quest nav li.menu-add-quest a,
 body.body-content-main-your-quest nav li.menu-your-quest a,
-body.body-content-main-find-quest nav li.menu-find-quest a {
+body.body-content-main-find-quest nav li.menu-find-quest a,
+body.body-content-main-profile nav li.menu-profile a {
     color: #fff;
     background-color: #080808;
 }
 
 body div#content-main div.add-quest,
 body div#content-main div.your-quest,
-body div#content-main div.find-quest {
+body div#content-main div.find-quest,
+body div#content-main div.profile {
     display: none;
 }
 
 body.body-content-main-add-quest div#content-main div.add-quest,
 body.body-content-main-your-quest div#content-main div.your-quest,
-body.body-content-main-find-quest div#content-main div.find-quest {
+body.body-content-main-find-quest div#content-main div.find-quest,
+body.body-content-main-profile div#content-main div.profile {
     display: block!important;
 }
