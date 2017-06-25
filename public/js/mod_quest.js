@@ -79,9 +79,8 @@ function clearQuestEntries(containerId) {
     $('#' + containerId).empty();
 }
 
-function addQuestEntry(containerId, data, actionHtml) {
-    data = JSON.parse(JSON.stringify(data));
-    var html = '<div class="col-md-12"><div class="panel panel-default">';
+function addQuestEntry(containerId, id, data, actionHtml) {
+    var html = '<div class="col-md-12" id="' + id + '"><div class="panel panel-default">';
     html += '<div class="panel-body">';
     html += '<h4>' + data.questName + '</h4><br>';
     html += data.questDescription + '<br>';
@@ -103,30 +102,83 @@ function addQuestEntry(containerId, data, actionHtml) {
     $('#' + containerId).append(html);
 }
 
+function finishQuest(id) {
+
+}
+
+function abandonQuest(id) {
+    loading(true);
+    firebase.database().ref('user-quests/' + id).remove().then(function() {
+        loading(false);
+        refreshYourQuest();
+    }).catch(function(error) {
+        loading(false);
+        // Handle Errors here.
+        if (!error || !error.code)
+            return;
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        showAlert(errorMessage);
+    });
+}
+
+function startQuest(id) {
+    var startQuestData = {
+        questId: id,
+    }
+
+    var newQuestKey = firebase.database().ref().child('user-quests').push().key;
+
+    var updates = {};
+    updates['/user-quests/' + signInUser.uid] = startQuestData;
+
+    loading(true);
+    firebase.database().ref().update(updates).then(function() {
+        loading(false);
+        showAlert('Quest has begun!!');
+    }).catch(function(error) {
+        loading(false);
+        // Handle Errors here.
+        if (!error || !error.code)
+            return;
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        showAlert(errorMessage);
+    });
+}
+
 function refreshYourQuest() {
-    var actionHtml = '<a class="btn btn-sm btn-success">Finish Quest</a>';
-    actionHtml += '&nbsp;<a class="btn btn-sm btn-danger">Abandon</a>';
-    var allQuestsRef = firebase.database().ref('quests');
-    showEmptyQuestEntryMessage('yourQuestsContainer', 'No Quests');
+    var allQuestsRef = firebase.database().ref('user-quests');
+    showEmptyQuestEntryMessage('yourQuestsContainer', 'You are not start any quest<br><br><a class="btn btn-lg btn-default" href="javascript:goToFindQuest()">Find Quests</a>');
     allQuestsRef.on('value', function(snapshot) {
         if (snapshot.val()) {
             clearQuestEntries('yourQuestsContainer');
-            snapshot.forEach(function(snapshotEntry) {
-                addQuestEntry('yourQuestsContainer', snapshotEntry, actionHtml);
+            snapshot.forEach(function(startQuestEntry) {
+                var userQuestId = startQuestEntry.getKey();
+                var userQuestData = JSON.parse(JSON.stringify(startQuestEntry.val()));
+                firebase.database().ref('quests/' + userQuestData.questId).once('value').then(function(questEntry) {
+                    var id = questEntry.getKey();
+                    var data = JSON.parse(JSON.stringify(questEntry.val()));
+                    var actionHtml = '<a class="btn btn-md btn-success" href="javascript:finishQuest(\'' + userQuestId + '\')">Finish Quest</a>';
+                    actionHtml += '&nbsp;<a class="btn btn-md btn-danger" href="javascript:abandonQuest(\'' + userQuestId + '\')">Abandon</a>';
+                    addQuestEntry('yourQuestsContainer', 'yourQuestEntry' + userQuestId, data, actionHtml);
+                });
             });
         }
     });
 }
 
 function refreshFindQuest() {
-    var actionHtml = '<a class="btn btn-sm btn-success">Start Quest</a>';
     var allQuestsRef = firebase.database().ref('quests');
     showEmptyQuestEntryMessage('findQuestsContainer', 'No Quests');
     allQuestsRef.on('value', function(snapshot) {
         if (snapshot.val()) {
             clearQuestEntries('findQuestsContainer');
-            snapshot.forEach(function(snapshotEntry) {
-                addQuestEntry('findQuestsContainer', snapshotEntry, actionHtml);
+            snapshot.forEach(function(questEntry) {
+                var id = questEntry.getKey();
+                var data = JSON.parse(JSON.stringify(questEntry.val()));
+                var actionHtml = '<a class="btn btn-md btn-success" href="javascript:startQuest(\'' + id + '\')">Start Quest</a>';
+                addQuestEntry('findQuestsContainer', 'findQuestEntry' + id, data, actionHtml);
             });
         }
     });

@@ -28,3 +28,15 @@ body.body-content-main-find-quest nav li.menu-find-quest a {
     color: #fff;
     background-color: #080808;
 }
+
+body div#content-main div.add-quest,
+body div#content-main div.your-quest,
+body div#content-main div.find-quest {
+    display: none;
+}
+
+body.body-content-main-add-quest div#content-main div.add-quest,
+body.body-content-main-your-quest div#content-main div.your-quest,
+body.body-content-main-find-quest div#content-main div.find-quest {
+    display: block!important;
+}
